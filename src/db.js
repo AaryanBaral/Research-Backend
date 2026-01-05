@@ -2,17 +2,26 @@ import pg from "pg";
 import dotenv from "dotenv";
 
 dotenv.config();
-
 const { Pool } = pg;
 
-const ca = process.env.PG_CA_CERT?.replace(/\\n/g, "\n");
+if (!process.env.PG_CA_CERT) throw new Error("PG_CA_CERT missing");
+if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL missing");
+
+const ca = process.env.PG_CA_CERT.replace(/\\n/g, "\n");
+console.log(ca)
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl:{
-    rejectUnauthorized: false,
-    ca
+  ssl: {
+    ca,                // <-- MUST be string with real newlines
+    rejectUnauthorized: true,
   },
 });
 
-export const query = (text, params) => pool.query(text, params);
+// optional: verify a connection once at boot
+pool.connect().then(c => c.release()).catch(err => {
+  console.error("DB connect failed:", err);
+});
+
 export default pool;
+export const query = (text, params) => pool.query(text, params);
