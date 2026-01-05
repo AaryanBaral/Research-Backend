@@ -48,7 +48,7 @@ router.get("/", async (_req, res) => {
 
     return res.json({ categories: result.rows, page, limit, total });
   } catch (error) {
-    console.error("🔥 /api/categories error:", err);
+    console.error("🔥 /api/categories error:", error);
     return res
       .status(500)
       .json({ error: error?.message || "Failed to fetch categories" });
