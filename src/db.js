@@ -8,12 +8,11 @@ if (!process.env.PG_CA_CERT) throw new Error("PG_CA_CERT missing");
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL missing");
 
 const ca = process.env.PG_CA_CERT.replace(/\\n/g, "\n");
-console.log(ca)
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    ca,                // <-- MUST be string with real newlines
+    ca,                
     rejectUnauthorized: true,
   },
 });
