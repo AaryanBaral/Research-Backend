@@ -23,6 +23,19 @@ const uploadDir = path.resolve(__dirname, "..", process.env.UPLOAD_DIR || "uploa
 app.use(cors({ origin: corsOrigin }));
 app.use(express.json({ limit: "2mb" }));
 
+app.use((req, res, next) => {
+  const startTime = process.hrtime.bigint();
+  res.on("finish", () => {
+    const durationMs = Number(process.hrtime.bigint() - startTime) / 1e6;
+    console.log(
+      `${req.method} ${req.originalUrl} ${res.statusCode} ${durationMs.toFixed(
+        1
+      )}ms`
+    );
+  });
+  next();
+});
+
 app.use("/uploads", express.static(uploadDir));
 
 app.get("/health", (_req, res) => {
