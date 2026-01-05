@@ -45,7 +45,9 @@ router.get("/", async (_req, res) => {
 
     return res.json({ categories: result.rows, page, limit, total });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch categories" });
+    return res
+      .status(500)
+      .json({ error: error?.message || "Failed to fetch categories" });
   }
 });
 
@@ -66,7 +68,9 @@ router.get("/:id", async (req, res) => {
 
     return res.json({ category: result.rows[0] });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to fetch category" });
+    return res
+      .status(500)
+      .json({ error: error?.message || "Failed to fetch category" });
   }
 });
 
@@ -94,7 +98,9 @@ router.post("/", requireAuth, async (req, res) => {
     if (error?.code === "23505") {
       return res.status(409).json({ error: "Category already exists" });
     }
-    return res.status(500).json({ error: "Failed to create category" });
+    return res
+      .status(500)
+      .json({ error: error?.message || "Failed to create category" });
   }
 });
 
@@ -125,7 +131,9 @@ router.patch("/:id", requireAuth, async (req, res) => {
     if (error?.code === "23505") {
       return res.status(409).json({ error: "Category name already exists" });
     }
-    return res.status(500).json({ error: "Failed to update category" });
+    return res
+      .status(500)
+      .json({ error: error?.message || "Failed to update category" });
   }
 });
 
@@ -146,7 +154,9 @@ router.delete("/:id", requireAuth, async (req, res) => {
 
     return res.json({ success: true });
   } catch (error) {
-    return res.status(500).json({ error: "Failed to delete category" });
+    return res
+      .status(500)
+      .json({ error: error?.message || "Failed to delete category" });
   }
 });
 
