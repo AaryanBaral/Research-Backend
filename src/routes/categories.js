@@ -15,7 +15,10 @@ const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const getPagination = (query) => {
   const page = Math.max(1, Number.parseInt(query.page, 10) || 1);
-  const limit = Math.min(100, Math.max(1, Number.parseInt(query.limit, 10) || 20));
+  const limit = Math.min(
+    100,
+    Math.max(1, Number.parseInt(query.limit, 10) || 20)
+  );
   const offset = (page - 1) * limit;
   return { page, limit, offset };
 };
@@ -45,6 +48,7 @@ router.get("/", async (_req, res) => {
 
     return res.json({ categories: result.rows, page, limit, total });
   } catch (error) {
+    console.error("🔥 /api/categories error:", err);
     return res
       .status(500)
       .json({ error: error?.message || "Failed to fetch categories" });
