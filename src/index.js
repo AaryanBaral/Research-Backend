@@ -50,6 +50,7 @@ app.use("/api/subtopics", subtopicRoutes);
 app.use("/api/subtopic-documents", subtopicDocumentRoutes);
 
 app.use((err, _req, res, _next) => {
+  console.error("Request error:", err);
   if (err?.code === "LIMIT_FILE_SIZE") {
     return res.status(413).json({ error: "Video exceeds 500MB limit" });
   }
